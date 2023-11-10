@@ -220,3 +220,63 @@ bd[,2]
 bd[,c(1,2)]
 
 bd[bd$sexo=="M",]
+
+### defining a list CEO
+CEO <- c(11,12,13,14,15,16,17,18,19,20,50,40,34,56,12)
+
+stem(CEO)
+ls()
+rm(list=ls())
+
+
+## analise resposta e tratamento 
+View(resposta_tratamento)
+euronext <- 
+  readXL("C:/Users/vasil/Documents/Mestrado/analise dados/euronext.xlsx", 
+         rownames=FALSE, header=TRUE, na="", sheet="dados", stringsAsFactors=TRUE)
+
+names(euronext)
+
+
+colinestrease <- 
+  readXL("C:/Users/vasil/Documents/Mestrado/analise dados/colineasterase.xls",
+         rownames=FALSE, header=TRUE, na="", sheet="Folha1", stringsAsFactors=TRUE)
+
+#saber a natureza da distribuição
+normalityTest(~cserica, test="shapiro.test", data=colinestrease)
+
+normalityTest(~idade, test="shapiro.test", data=colinestrease)
+
+
+#quando um teste é maior que o valor de erro vai de x a 10% , mas é definido á priori 
+#quando o valor p-value é maior que o valor do erro, ele é normal, nao negado 
+
+#### testar o valor medio, com teste de HIPOTESE
+
+#opção 1
+### DEFINIR H0: Medio = 73
+### DEFINIR H1: Medio != 73
+#opção 2
+### DEFINIR H0: Medio >= 73   # definido a partir da media devolvida no R
+### DEFINIR H1: Medio < 73	   # o maior ou igual é definido com base na media 
+
+bpm <- readXL("C:/Users/vasil/Documents/Mestrado/analise dados/bpm.xlsx", 
+              rownames=FALSE, header=TRUE, na="", sheet="Folha1", stringsAsFactors=TRUE)
+
+library(abind, pos=17)
+library(e1071, pos=18)
+numSummary(bpm[,"bpm", drop=FALSE], statistics=c("mean", "sd", "IQR", 
+                                                 "quantiles"), quantiles=c(0,.25,.5,.75,1))
+
+with(bpm, (t.test(bpm, alternative = "two.sided", mu = 0.0, conf.level = 
+                    .95)))
+
+#output
+#t = -7.4987, df = 19, p-value = 0.0000004322
+
+with(bpm, (t.test(bpm, alternative = "less", mu = 73, conf.level = .95)))
+
+
+
+
+
